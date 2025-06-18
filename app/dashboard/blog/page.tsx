@@ -39,7 +39,7 @@ import {
 } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { BlogPostForm } from '@/components/forms/blog-post-form';
-import { Plus, Search, Filter, Edit, Trash2, Eye } from 'lucide-react';
+import { Plus, Search, Filter, Edit, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 
@@ -50,14 +50,15 @@ export default function BlogPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const filteredPosts = posts.filter((post) => {
-    const matchesSearch = post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         post.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         post.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
+    const matchesSearch =
+      post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      post.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      post.tags.some((tag) => tag.toLowerCase().includes(searchTerm.toLowerCase()));
     const matchesCategory = categoryFilter === 'all' || post.category === categoryFilter;
     return matchesSearch && matchesCategory;
   });
 
-  const categories = Array.from(new Set(posts.map(p => p.category)));
+  const categories = Array.from(new Set(posts.map((p) => p.category)));
 
   const handleAddPost = (postData: Omit<BlogPost, 'id' | 'createdAt'>) => {
     const newPost: BlogPost = {
@@ -111,14 +112,11 @@ export default function BlogPage() {
           </DialogTrigger>
           <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle>
-                {selectedPost ? 'Edit Blog Post' : 'Add New Blog Post'}
-              </DialogTitle>
+              <DialogTitle>{selectedPost ? 'Edit Blog Post' : 'Add New Blog Post'}</DialogTitle>
               <DialogDescription>
-                {selectedPost 
-                  ? 'Update the blog post information below.' 
-                  : 'Create a new blog post with content and metadata.'
-                }
+                {selectedPost
+                  ? 'Update the blog post information below.'
+                  : 'Create a new blog post with content and metadata.'}
               </DialogDescription>
             </DialogHeader>
             <BlogPostForm
@@ -147,7 +145,10 @@ export default function BlogPage() {
                 className="pl-10"
               />
             </div>
-            <Select value={categoryFilter} onValueChange={(value) => dispatch(setCategoryFilter(value))}>
+            <Select
+              value={categoryFilter}
+              onValueChange={(value) => dispatch(setCategoryFilter(value))}
+            >
               <SelectTrigger className="w-full sm:w-[200px]">
                 <Filter className="mr-2 h-4 w-4" />
                 <SelectValue placeholder="Category" />
@@ -195,9 +196,7 @@ export default function BlogPage() {
                       />
                       <div>
                         <div className="font-medium">{post.title}</div>
-                        <div className="text-sm text-gray-500">
-                          {post.slug}
-                        </div>
+                        <div className="text-sm text-gray-500">{post.slug}</div>
                         <div className="flex flex-wrap gap-1 mt-1">
                           {post.tags.slice(0, 2).map((tag) => (
                             <Badge key={tag} variant="outline" className="text-xs">
@@ -218,20 +217,14 @@ export default function BlogPage() {
                   </TableCell>
                   <TableCell>{post.author}</TableCell>
                   <TableCell>
-                    <Badge variant={post.status === 'published' ? 'success' : 'warning'}>
+                    <Badge variant={post.status === 'published' ? 'default' : 'outline'}>
                       {post.status}
                     </Badge>
                   </TableCell>
-                  <TableCell>
-                    {format(new Date(post.createdAt), 'MMM dd, yyyy')}
-                  </TableCell>
+                  <TableCell>{format(new Date(post.createdAt), 'MMM dd, yyyy')}</TableCell>
                   <TableCell className="text-right">
                     <div className="flex items-center justify-end space-x-2">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => openEditDialog(post)}
-                      >
+                      <Button variant="ghost" size="sm" onClick={() => openEditDialog(post)}>
                         <Edit className="h-4 w-4" />
                       </Button>
                       <Button
