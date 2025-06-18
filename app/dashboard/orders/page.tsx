@@ -29,7 +29,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { Search, Filter, Edit, Trash2 } from 'lucide-react';
+import { Search, Filter, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 
@@ -38,17 +38,19 @@ export default function OrdersPage() {
   const { orders, searchTerm, statusFilter } = useSelector((state: RootState) => state.orders);
 
   const filteredOrders = orders.filter((order) => {
-    const matchesSearch = order.productName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         order.customer.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         order.customerEmail.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = statusFilter === 'all' || 
-                         order.paymentStatus === statusFilter || 
-                         order.deliveryStatus === statusFilter;
+    const matchesSearch =
+      order.productName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      order.customer.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      order.customerEmail.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus =
+      statusFilter === 'all' ||
+      order.paymentStatus === statusFilter ||
+      order.deliveryStatus === statusFilter;
     return matchesSearch && matchesStatus;
   });
 
   const handleUpdatePaymentStatus = (orderId: string, paymentStatus: Order['paymentStatus']) => {
-    const order = orders.find(o => o.id === orderId);
+    const order = orders.find((o) => o.id === orderId);
     if (order) {
       dispatch(updateOrder({ ...order, paymentStatus }));
       toast.success('Payment status updated');
@@ -56,7 +58,7 @@ export default function OrdersPage() {
   };
 
   const handleUpdateDeliveryStatus = (orderId: string, deliveryStatus: Order['deliveryStatus']) => {
-    const order = orders.find(o => o.id === orderId);
+    const order = orders.find((o) => o.id === orderId);
     if (order) {
       dispatch(updateOrder({ ...order, deliveryStatus }));
       toast.success('Delivery status updated');
@@ -70,20 +72,29 @@ export default function OrdersPage() {
 
   const getPaymentStatusColor = (status: string) => {
     switch (status) {
-      case 'paid': return 'success';
-      case 'pending': return 'warning';
-      case 'failed': return 'destructive';
-      default: return 'secondary';
+      case 'paid':
+        return 'success';
+      case 'pending':
+        return 'warning';
+      case 'failed':
+        return 'destructive';
+      default:
+        return 'secondary';
     }
   };
 
   const getDeliveryStatusColor = (status: string) => {
     switch (status) {
-      case 'delivered': return 'success';
-      case 'shipped': return 'info';
-      case 'processing': return 'warning';
-      case 'cancelled': return 'destructive';
-      default: return 'secondary';
+      case 'delivered':
+        return 'success';
+      case 'shipped':
+        return 'default'; // "info" o‘rniga "default"
+      case 'processing':
+        return 'warning';
+      case 'cancelled':
+        return 'destructive';
+      default:
+        return 'secondary';
     }
   };
 
@@ -110,7 +121,10 @@ export default function OrdersPage() {
                 className="pl-10"
               />
             </div>
-            <Select value={statusFilter} onValueChange={(value) => dispatch(setStatusFilter(value))}>
+            <Select
+              value={statusFilter}
+              onValueChange={(value) => dispatch(setStatusFilter(value))}
+            >
               <SelectTrigger className="w-full sm:w-[200px]">
                 <Filter className="mr-2 h-4 w-4" />
                 <SelectValue placeholder="Status" />
@@ -168,7 +182,7 @@ export default function OrdersPage() {
                   <TableCell>
                     <Select
                       value={order.paymentStatus}
-                      onValueChange={(value: Order['paymentStatus']) => 
+                      onValueChange={(value: Order['paymentStatus']) =>
                         handleUpdatePaymentStatus(order.id, value)
                       }
                     >
@@ -187,7 +201,7 @@ export default function OrdersPage() {
                   <TableCell>
                     <Select
                       value={order.deliveryStatus}
-                      onValueChange={(value: Order['deliveryStatus']) => 
+                      onValueChange={(value: Order['deliveryStatus']) =>
                         handleUpdateDeliveryStatus(order.id, value)
                       }
                     >
@@ -204,9 +218,7 @@ export default function OrdersPage() {
                       </SelectContent>
                     </Select>
                   </TableCell>
-                  <TableCell>
-                    {format(new Date(order.createdAt), 'MMM dd, yyyy')}
-                  </TableCell>
+                  <TableCell>{format(new Date(order.createdAt), 'MMM dd, yyyy')}</TableCell>
                   <TableCell className="text-right">
                     <Button
                       variant="ghost"
